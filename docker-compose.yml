@@ -1,0 +1,22 @@
+services:
+ mongo-persons:
+  image: mongo:latest
+  ports:
+    - 27018:27018
+  volumes:
+    - mongodb_person_data:/data/db
+
+ person-service:
+  depends_on:
+    - mongo-persons
+  image: neletielemans/product-service
+  ports:
+    - 8080:8080
+  links:
+    - mongo-persons
+  environment:
+   MONGODB_PORT: 27018
+   MONGODB_HOST: mongo-persons
+
+volumes:
+ mongodb_person_data:
