@@ -18,19 +18,19 @@ public class CompetitionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.OK)
-    public void createPerson(@RequestBody CompetitionRequest competitionRequest) {
+    public void createCompetition(@RequestBody CompetitionRequest competitionRequest) {
         competitionService.createCompetition(competitionRequest);
     }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public List<CompetitionResponse> getPersonById(@RequestParam List<String> id) {
+    public List<CompetitionResponse> getCompetitionById(@RequestParam List<String> id) {
         return competitionService.getCompetitionById(id);
     }
 
     @GetMapping("/all")
     @ResponseStatus(HttpStatus.OK)
-    public List<CompetitionResponse> getAllPersons() {
+    public List<CompetitionResponse> getAllCompetitions() {
         return competitionService.getAllCompetitions();
     }
 
