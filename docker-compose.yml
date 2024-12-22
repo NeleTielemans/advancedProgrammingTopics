@@ -6,6 +6,29 @@ services:
   volumes:
     - mongodb_person_data:/data/db
 
+ mongo-dogs:
+  image: mongo:latest
+  ports:
+    - 27019:27019
+  volumes:
+    - mongodb_dog_data:/data/db
+
+ mongo-competitions:
+  image: mongo:latest
+  ports:
+    - 27017:27017
+  volumes:
+    - mongodb_competition_data:/data/db
+    
+ mysql-history:
+  image: mysql:latest
+  ports:
+    - 3306:3306
+  volumes:
+    - mysql_history_data:/var/lib/mysql
+  environment:
+   MYSQL_ROOT_PASSWORD: abc123
+    
  person-service:
   depends_on:
     - mongo-persons
@@ -18,5 +41,53 @@ services:
    MONGODB_PORT: 27018
    MONGODB_HOST: mongo-persons
 
+ dog-service:
+  depends_on:
+    - mongo-dogs
+  image: neletielemans/dog-service
+  ports:
+    - 8084:8084
+  links:
+    - mongo-dogs
+  environment:
+   MONGODB_PORT: 27019
+   MONGODB_HOST: mongo-dogs
+
+ competition-service:
+  depends_on:
+    - mongo-competitions
+  image: neletielemans/competition-service
+  ports:
+    - 8082:8082
+  links:
+    - mongo-competitions
+  environment:
+   MONGODB_PORT: 27017
+   MONGODB_HOST: mongo-competitions
+   
+ history-service:
+  depends_on:
+    - person-service
+    - dog-service
+    - competition-service
+  image: neletielemans/history-service
+  ports:
+    - 8081:8081
+  links:
+    - person-service
+    - dog-service
+    - competition-service
+  environment:
+   PERSON_SERVICE_BASEURL: person-service:8080
+   DOG_SERVICE_BASEURL: dog-service:8084
+   COMPETITION_SERVICE_BASEURL: competition-service:8082
+   MYSQL_DB_USERNAME: root
+   MYSQL_DB_PASSWORD: abc123
+   MYSQL_DB_HOST: mysql-history
+   MYSQL_DB_PORT: 3306
+
 volumes:
  mongodb_person_data:
+ mongodb_dog_data:
+ mongodb_competition_data:
+ mysql_history_data:
