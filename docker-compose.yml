@@ -1,6 +1,7 @@
 services:
  mongo-persons:
   image: mongo:latest
+  command: mongod --port 27018
   ports:
     - 27018:27018
   volumes:
@@ -8,6 +9,7 @@ services:
 
  mongo-dogs:
   image: mongo:latest
+  command: mongod --port 27019
   ports:
     - 27019:27019
   volumes:
@@ -15,6 +17,7 @@ services:
 
  mongo-competitions:
   image: mongo:latest
+  command: mongod --port 27017
   ports:
     - 27017:27017
   volumes:
@@ -32,7 +35,7 @@ services:
  person-service:
   depends_on:
     - mongo-persons
-  image: nelet/product-service
+  image: nelet/person-service
   ports:
     - 8080:8080
   links:
@@ -40,6 +43,8 @@ services:
   environment:
    MONGODB_PORT: 27018
    MONGODB_HOST: mongo-persons
+   SPRING_DATA_MONGODB_URI: mongodb://mongo-persons:27018/person-service
+   SERVER_PORT: 8080
 
  dog-service:
   depends_on:
@@ -52,6 +57,9 @@ services:
   environment:
    MONGODB_PORT: 27019
    MONGODB_HOST: mongo-dogs
+   SPRING_DATA_MONGODB_URI: mongodb://mongo-dogs:27019/dog-service
+   SERVER_PORT: 8084
+   SPRING_APPLICATION_NAME: dog-service
 
  competition-service:
   depends_on:
@@ -64,6 +72,8 @@ services:
   environment:
    MONGODB_PORT: 27017
    MONGODB_HOST: mongo-competitions
+   SPRING_DATA_MONGODB_URI: mongodb://mongo-competitions:27017/competition-service
+   SERVER_PORT: 8082
    
  history-service:
   depends_on:
@@ -85,9 +95,12 @@ services:
    MYSQL_DB_PASSWORD: abc123
    MYSQL_DB_HOST: mysql-history
    MYSQL_DB_PORT: 3306
+   SPRING_DATASOURCE_URL: jdbc:mysql://mysql-history:3306/historydb?useSSL=false&allowPublicKeyRetrieval=true&createDatabaseIfNotExist=true
+   SERVER_PORT: 8081
 
 volumes:
  mongodb_person_data:
  mongodb_dog_data:
  mongodb_competition_data:
  mysql_history_data:
+ 
