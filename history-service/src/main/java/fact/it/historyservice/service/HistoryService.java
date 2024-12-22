@@ -40,7 +40,7 @@ public class HistoryService {
         }
 
         DogResponse[] dogResponseArray = webClient.get()
-                .uri("http://" + dogServiceBaseUrl + "/api/inventory",
+                .uri("http://" + dogServiceBaseUrl + "/api/dog",
                         uriBuilder -> uriBuilder.queryParam("id", historyRequest.getDogId()).build())
                 .retrieve()
                 .bodyToMono(DogResponse[].class)
@@ -50,7 +50,7 @@ public class HistoryService {
         }
 
         CompetitionResponse[] competitionResponses = webClient.get()
-                .uri("http://" + competitionServiceBaseUrl + "/api/inventory",
+                .uri("http://" + competitionServiceBaseUrl + "/api/competition",
                         uriBuilder -> uriBuilder.queryParam("id", historyRequest.getCompetitionId()).build())
                 .retrieve()
                 .bodyToMono(CompetitionResponse[].class)

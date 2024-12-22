@@ -25,23 +25,31 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: product-service
-          uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
+        - id: person-service-all
+          uri: http://${PERSON_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/products
-            - Method=POST
-          filters:
-            - SetPath=/api/product
-        - id: product-service-all
-          uri: http://${PRODUCT_SERVICE_BASEURL:localhost:8080}
-          predicates:
-            - Path=/products
+            - Path=/persons
             - Method=GET
           filters:
-            - SetPath=/api/product/all
-        - id: order-service
-          uri: http://${ORDER_SERVICE_BASEURL:localhost:8081}
+            - SetPath=/api/person/all
+        - id: dog-service-all
+          uri: http://${DOG_SERVICE_BASEURL:localhost:8080}
           predicates:
-            - Path=/orders
+            - Path=/dogs
+            - Method=GET
           filters:
-            - SetPath=/api/order
+            - SetPath=/api/dog/all
+        - id: competition-service-all
+          uri: http://${DOG_SERVICE_BASEURL:localhost:8080}
+          predicates:
+            - Path=/competitions
+            - Method=GET
+          filters:
+            - SetPath=/api/competition/all
+        - id: history-service-post
+          uri: http://${HISTORY_SERVICE_BASEURL:localhost:8081}
+          predicates:
+            - Path=/history
+            - Method=POST
+          filters:
+            - SetPath=/api/history
